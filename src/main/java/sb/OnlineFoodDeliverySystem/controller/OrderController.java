@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sb.OnlineFoodDeliverySystem.exception.InsufficientBalanceException;
 import sb.OnlineFoodDeliverySystem.model.Account;
+import sb.OnlineFoodDeliverySystem.model.MenuItem;
 import sb.OnlineFoodDeliverySystem.model.Order;
 import sb.OnlineFoodDeliverySystem.model.UserInfo;
 import sb.OnlineFoodDeliverySystem.service.AccountService;
@@ -14,6 +15,7 @@ import sb.OnlineFoodDeliverySystem.service.OrderService;
 import sb.OnlineFoodDeliverySystem.service.UserInfoService;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -30,25 +32,23 @@ public class OrderController {
     private OrderService orderService;
 
 
-    @PostMapping("/api/saveOrder/{accountNumber}/{payAmount}")
-    public ResponseEntity<String> saveOrder(@RequestBody Order order, @PathVariable String accountNumber) throws Exception {
+    @PostMapping("/api/saveOrder/{accountNumber}")
+    public ResponseEntity<String> saveOrder(@RequestBody MenuItem menuItem, @PathVariable String accountNumber) throws Exception {
 
         Account account = accountService.getAccount(accountNumber);
 
-        double newBalance = account.getBalance() -order.getTotalAmount().doubleValue();
-        account.setBalance(newBalance);
+        Double balance = account.getBalance() - menuItem.getPrice().doubleValue();
+        account.setBalance(balance);
+
         accountService.saveAccount(account);
 
-        try {
-            if (account.getBalance() > order.getTotalAmount().doubleValue()) {
-                UserInfo userInfo = order.getUser();
-                order.setUser(userInfo);
-                orderService.saveOrder(order);
-                return ResponseEntity.ok("Order Sucessfull");
-            }
-        } catch (Exception ex) {
-        }
-        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("Didn't Saved");
+        Order order = new Order();
+        order.setOrderDate(LocalDateTime.now());
+        order.setTotalAmount(menuItem.getPrice());
+        order.setUser(account.getUserInfo());
+        orderService.saveOrder(order);
+
+        return ResponseEntity.ok("Ok");
     }
 
 

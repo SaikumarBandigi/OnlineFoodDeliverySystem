@@ -36,8 +36,10 @@ public class AccountService {
             throw new InsufficientBalanceException("Insufficient balance");
         }
 
+    }
 
-
+    public Account getAccountById(Long id) {
+        return accountDao.findById(id).get();
     }
 
 
