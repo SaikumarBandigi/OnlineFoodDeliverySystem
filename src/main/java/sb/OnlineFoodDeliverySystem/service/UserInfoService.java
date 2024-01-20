@@ -40,4 +40,11 @@ public class UserInfoService {
         return userInfoDao.save(userInfo);
     }
 
+    public UserInfo getUserById(Long id) {
+        return userInfoDao.findById(id).get();
+    }
+
+
+
+
 }

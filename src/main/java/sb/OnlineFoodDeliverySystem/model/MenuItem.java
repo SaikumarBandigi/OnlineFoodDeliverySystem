@@ -27,10 +27,9 @@ public class MenuItem {
 
     // Getters and Setters
 
-    @ManyToOne
-    @JoinColumn(name = "restaurant_id")
+    @ManyToOne(targetEntity = Restaurant.class,fetch = FetchType.EAGER)
+    @JoinColumn(name = "fk_restaurant_id")
     private Restaurant restaurant;
-
 
 
 }

@@ -30,13 +30,9 @@ public class Order {
 
     // Getters and Setters
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(targetEntity = UserInfo.class,fetch = FetchType.EAGER)
+    @JoinColumn(name = "fk_user_id")
     private UserInfo user;
-
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<Delivery> deliveries=new ArrayList<>();
-
-
+    
 
 }

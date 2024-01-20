@@ -1,34 +1,28 @@
 package sb.OnlineFoodDeliverySystem.model;
 
-import javax.persistence.*;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import javax.persistence.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @Entity
-@Table(name = "users")
-public class UserInfo {
+public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String accountNumber;
 
-    private String username;
-    private String password;
-    private String role;
+    private double balance;
 
-    // Getters and Setters
-
-
+    @ManyToOne(targetEntity = UserInfo.class,fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_user_id")
+    private UserInfo userInfo;
 
 }

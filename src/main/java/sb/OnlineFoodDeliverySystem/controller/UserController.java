@@ -2,9 +2,11 @@
 package sb.OnlineFoodDeliverySystem.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 import sb.OnlineFoodDeliverySystem.Repository.UserInfoDao;
 import sb.OnlineFoodDeliverySystem.exception.UsernameIsCorrectPasswordException;
 import sb.OnlineFoodDeliverySystem.exception.UsernameNotFoundException;
@@ -29,6 +31,27 @@ public class UserController {
 
     @Autowired
     private OrderService orderService;
+
+
+    @GetMapping("/api/getUser/{id}")
+    public UserInfo getUserInfo(@PathVariable Long id) {
+        return userInfoService.getUserById(id);
+    }
+
+
+    @PostMapping("/api/saveUser")
+    public ResponseEntity<String> saveUser(@RequestBody UserInfo userInfo, UriComponentsBuilder builder) {
+
+        UserInfo userInfo1 = userInfoService.saveUserInfo(userInfo);
+
+        if (userInfo1.getId() == 0) {
+            return new ResponseEntity<>("This Topic already exist", HttpStatus.CONFLICT);
+        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(builder.path("/api/getUser/{id}").buildAndExpand(userInfo.getId()).toUri());
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
+
+    }
 
 
     @PostMapping("/api/login")
