@@ -2,11 +2,13 @@ package sb.OnlineFoodDeliverySystem.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import sb.OnlineFoodDeliverySystem.Repository.AccountDao;
 import sb.OnlineFoodDeliverySystem.exception.InsufficientBalanceException;
 import sb.OnlineFoodDeliverySystem.model.Account;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -43,4 +45,7 @@ public class AccountService {
     }
 
 
+    public List<Account> getAllAccounts() {
+        return accountDao.findAll();
+    }
 }

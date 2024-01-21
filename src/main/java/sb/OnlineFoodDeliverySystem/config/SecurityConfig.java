@@ -21,7 +21,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(getPasswordEncoder());
+        auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
     }
 
     @Override
@@ -29,22 +29,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/account/saveAccount").permitAll() // Allow unauthenticated access to this URL
-                .anyRequest().authenticated().and().httpBasic();
+                .antMatchers("/api/account/getAllAccounts").hasRole("ADMIN") // Allow only admin for getAllAccounts
+                .anyRequest().authenticated()
+                .and().httpBasic();
     }
 
-    public PasswordEncoder getPasswordEncoder() {
-        return new PasswordEncoder() {
-            @Override
-            public String encode(CharSequence rawPassword) {
-                return rawPassword.toString();
-            }
-
-            @Override
-            public boolean matches(CharSequence rawPassword, String encodedPassword) {
-                return (rawPassword.equals(encodedPassword));
-            }
-        };
-    }
 
 
 }

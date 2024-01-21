@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import sb.OnlineFoodDeliverySystem.model.Account;
 import sb.OnlineFoodDeliverySystem.service.AccountService;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -32,6 +33,12 @@ public class AccountController {
             return ResponseEntity.notFound().build();
         }
         return new ResponseEntity<>(account, HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllAccounts")
+    public ResponseEntity<List<Account>> getAllAccounts() {
+        List<Account> allAccounts = accountService.getAllAccounts();
+        return new ResponseEntity<>(allAccounts, HttpStatus.OK);
     }
 
 
