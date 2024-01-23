@@ -14,4 +14,5 @@ public interface RestaurantService {
     Restaurant getRestaurantById(Long id);
 
 
+    Restaurant getRestaurantByName(String restaurantName);
 }
