@@ -35,31 +35,40 @@ public class OrderController {
 
     @PostMapping("/saveOrder/{userId}")
     public ResponseEntity<Order> saveOrder(@RequestBody Order order, @PathVariable Long userId) {
+        try {
+            UserInfo userInfo = userInfoService.getUserById(userId);
+            order.setUser(userInfo);
 
-        UserInfo userInfo = userInfoService.getUserById(userId);
-        order.setUser(userInfo);
+            Order newOrder = orderService.saveOrder(order);
 
-        Order newOrder = orderService.saveOrder(order);
+            if (newOrder != null) {
+                Account account = accountService.getAccountByUserInfo(userInfo);
+                Double dbBalance = account.getBalance();
 
-        if (newOrder != null) {
-            Account account = accountService.getAccountByUserInfo(userInfo);
-            Double DbBalance = account.getBalance();
-            System.out.println(DbBalance);
-            if (DbBalance > newOrder.getTotalAmount().doubleValue()) {
-                Double presentbalance = DbBalance - newOrder.getTotalAmount().doubleValue();
-                System.out.println(presentbalance);
-                accountService.updateAccountBalance(presentbalance, account);
+                if (dbBalance > newOrder.getTotalAmount().doubleValue()) {
+                    Double presentBalance = dbBalance - newOrder.getTotalAmount().doubleValue();
+                    accountService.updateAccountBalance(presentBalance, account);
 
-                Delivery delivery = new Delivery();
-                delivery.setDeliveryDate(null);
-                delivery.setStatus("Not Delivered");
-                delivery.setOrder(order);
-                DeliveryService.SaveDelivery(delivery);
+                    Delivery delivery = new Delivery();
+                    delivery.setDeliveryDate(null);
+                    delivery.setStatus("Not Delivered");
+                    delivery.setOrder(order);
+                    DeliveryService.SaveDelivery(delivery);
+                }
             }
-        }
 
-        return new ResponseEntity<>(order, HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(order, HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception e) {
+        return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
 
 
 }

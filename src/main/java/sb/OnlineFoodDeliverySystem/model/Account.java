@@ -25,5 +25,4 @@ public class Account {
     @JoinColumn(name = "fk_user_id")
     private UserInfo userInfo;
 
-
 }

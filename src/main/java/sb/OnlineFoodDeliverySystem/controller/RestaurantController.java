@@ -20,11 +20,18 @@ public class RestaurantController {
     private RestaurantServiceImpl restaurantService;
 
     @GetMapping("/BrowseRestaurants")
-    public List<Restaurant> browseRestaurants() {
-        return restaurantService.getAllRestaurants();
+    public ResponseEntity<List<Restaurant>> browseRestaurants() {
+        try {
+            List<Restaurant> restaurants = restaurantService.getAllRestaurants();
+            return new ResponseEntity<>(restaurants, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            // Handle NoSuchElementException
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Or you can return a custom error message
+        } catch (Exception e) {
+            // Handle other exceptions
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // Or you can return a custom error message
+        }
     }
-
-
 
 
 

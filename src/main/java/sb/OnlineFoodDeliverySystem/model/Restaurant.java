@@ -30,7 +30,7 @@ public class Restaurant {
 
     // Getters and Setters
 
-    @OneToMany(mappedBy = "restaurant", targetEntity = MenuItem.class)
+    @OneToMany(mappedBy = "restaurant", targetEntity = MenuItem.class,cascade = CascadeType.ALL)
     @JsonIgnore
     private List<MenuItem> menuItems = new ArrayList<>();
 
