@@ -19,5 +19,13 @@ public class RestaurantController {
     @Autowired
     private RestaurantServiceImpl restaurantService;
 
+    @GetMapping("/BrowseRestaurants")
+    public List<Restaurant> browseRestaurants() {
+        return restaurantService.getAllRestaurants();
+    }
+
+
+
+
 
 }

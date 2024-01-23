@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,7 +30,8 @@ public class Restaurant {
 
     // Getters and Setters
 
-    @OneToMany(mappedBy = "restaurant", targetEntity = MenuItem.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "restaurant", targetEntity = MenuItem.class)
+    @JsonIgnore
     private List<MenuItem> menuItems = new ArrayList<>();
 
 }

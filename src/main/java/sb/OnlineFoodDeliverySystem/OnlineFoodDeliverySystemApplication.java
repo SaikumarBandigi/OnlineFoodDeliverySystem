@@ -36,8 +36,8 @@ public class OnlineFoodDeliverySystemApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        saveUserInfoWithAccountWithoutOrders(); // -> 1 User with 1 Account
-         saveRestaurantWithMenus(); // -> One Restaurant has Multiple Menus
+        //  saveUserInfoWithAccountWithoutOrders(); // -> 1 User with 1 Account
+        // saveRestaurantWithMenus(); // -> One Restaurant has Multiple Menus
 
     }
 

@@ -6,11 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sb.OnlineFoodDeliverySystem.Repository.AccountDao;
-import sb.OnlineFoodDeliverySystem.model.Account;
-import sb.OnlineFoodDeliverySystem.model.MenuItem;
-import sb.OnlineFoodDeliverySystem.model.Order;
-import sb.OnlineFoodDeliverySystem.model.UserInfo;
+import sb.OnlineFoodDeliverySystem.model.*;
 import sb.OnlineFoodDeliverySystem.service.impl.AccountServiceImpl;
+import sb.OnlineFoodDeliverySystem.service.impl.DeliveryServiceImpl;
 import sb.OnlineFoodDeliverySystem.service.impl.OrderServiceImpl;
 import sb.OnlineFoodDeliverySystem.service.impl.UserInfoServiceImpl;
 
@@ -31,6 +29,9 @@ public class OrderController {
     @Autowired
     private AccountServiceImpl accountService;
 
+    @Autowired
+    private DeliveryServiceImpl DeliveryService;
+
 
     @PostMapping("/saveOrder/{userId}")
     public ResponseEntity<Order> saveOrder(@RequestBody Order order, @PathVariable Long userId) {
@@ -48,6 +49,12 @@ public class OrderController {
                 Double presentbalance = DbBalance - newOrder.getTotalAmount().doubleValue();
                 System.out.println(presentbalance);
                 accountService.updateAccountBalance(presentbalance, account);
+
+                Delivery delivery = new Delivery();
+                delivery.setDeliveryDate(null);
+                delivery.setStatus("Not Delivered");
+                delivery.setOrder(order);
+                DeliveryService.SaveDelivery(delivery);
             }
         }
 
