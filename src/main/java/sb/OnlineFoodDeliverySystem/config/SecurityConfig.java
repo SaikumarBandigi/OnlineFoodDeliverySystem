@@ -40,6 +40,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /*
 
+    anyRequest() means any request is authenticated because in real time scenario to browse or to order something
+    user gets logged in so i have authenticated here
+
+     */
+
+    /*
+
     if we want to access the url GET-> localhost:8080/api/user/getAllUsers
 
 Authorization
@@ -50,6 +57,8 @@ Password:Sonu
 then hit the url
 
      */
+
+
 
 }
 
