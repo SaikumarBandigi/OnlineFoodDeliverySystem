@@ -10,6 +10,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import sb.OnlineFoodDeliverySystem.model.UserInfo;
 import sb.OnlineFoodDeliverySystem.service.impl.UserInfoServiceImpl;
 
+import java.util.List;
+
 
 //@CrossOrigin("*")
 @RestController
@@ -43,6 +45,14 @@ public class UserController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder.path("/api/getUser/{id}").buildAndExpand(userInfo.getId()).toUri());
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
+
+    }
+
+    @GetMapping("/getAllUsers")
+    public ResponseEntity<List<UserInfo>> getAllUsers() {
+
+        List<UserInfo> userInfoList = userInfoService.getAllUsers();
+        return new ResponseEntity<>(userInfoList, HttpStatus.OK);
 
     }
 

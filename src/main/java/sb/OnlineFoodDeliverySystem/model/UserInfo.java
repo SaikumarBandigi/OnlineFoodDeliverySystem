@@ -32,11 +32,12 @@ public class UserInfo {
 
 
     @OneToMany(mappedBy = "user", targetEntity = Order.class)
-  //  @JsonIgnore  // Exclude this property from serialization
+    @JsonIgnore  // Exclude this property from serialization
     private List<Order> orders = new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL, targetEntity = Account.class,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL, targetEntity = Account.class, fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<Account> accounts = new ArrayList<>();
 
 

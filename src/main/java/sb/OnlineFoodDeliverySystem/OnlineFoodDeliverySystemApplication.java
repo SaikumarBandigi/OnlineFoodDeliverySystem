@@ -44,8 +44,8 @@ public class OnlineFoodDeliverySystemApplication implements CommandLineRunner {
     public void saveUserInfoWithAccountWithoutOrders() {
 
         UserInfo userInfo = new UserInfo();
-        userInfo.setUsername("sonu");
-        userInfo.setPassword("sonu");
+        userInfo.setUsername("Sonu");
+        userInfo.setPassword("$2a$10$iZ2E2lYA42PkQMwMCdKFnugEVz0AJzw2Oj2SitYHf7Qdz3RC6NDqC"); // password has been encoded
         userInfo.setRole("ROLE_ADMIN");
 
         List<Account> accounts = new ArrayList<>();

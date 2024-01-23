@@ -2,6 +2,8 @@ package sb.OnlineFoodDeliverySystem.service;
 
 import sb.OnlineFoodDeliverySystem.model.UserInfo;
 
+import java.util.List;
+
 public interface UserInfoService {
 
 
@@ -9,4 +11,6 @@ public interface UserInfoService {
 
 
     UserInfo getUserById(Long userId);
+
+    List<UserInfo> getAllUsers();
 }

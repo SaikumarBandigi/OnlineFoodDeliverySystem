@@ -36,6 +36,7 @@ public class OrderController {
     @PostMapping("/saveOrder/{userId}")
     public ResponseEntity<Order> saveOrder(@RequestBody Order order, @PathVariable Long userId) {
         try {
+            // since user is related to order and if he wants to order he should do payment
             UserInfo userInfo = userInfoService.getUserById(userId);
             order.setUser(userInfo);
 
@@ -46,9 +47,16 @@ public class OrderController {
                 Double dbBalance = account.getBalance();
 
                 if (dbBalance > newOrder.getTotalAmount().doubleValue()) {
+
+                    // if the order gets success orderamount in order and the balance amount from account gets deducted...
+
                     Double presentBalance = dbBalance - newOrder.getTotalAmount().doubleValue();
                     accountService.updateAccountBalance(presentBalance, account);
 
+
+                    // when the order gets successful,it won't be delivered at that very fast so as of now save with null and not delivered
+
+// when delivery gets success there another api in DeliveryController to update the details
                     Delivery delivery = new Delivery();
                     delivery.setDeliveryDate(null);
                     delivery.setStatus("Not Delivered");
@@ -67,8 +75,6 @@ public class OrderController {
     public ResponseEntity<String> handleException(Exception e) {
         return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-
 
 
 }

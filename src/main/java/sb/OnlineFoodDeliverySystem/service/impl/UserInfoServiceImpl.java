@@ -6,6 +6,8 @@ import sb.OnlineFoodDeliverySystem.Repository.UserInfoDao;
 import sb.OnlineFoodDeliverySystem.model.UserInfo;
 import sb.OnlineFoodDeliverySystem.service.UserInfoService;
 
+import java.util.List;
+
 
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
@@ -23,6 +25,11 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public UserInfo getUserById(Long userId) {
         return userInfoDao.findById(userId).get();
+    }
+
+    @Override
+    public List<UserInfo> getAllUsers() {
+        return userInfoDao.findAll();
     }
 
 
