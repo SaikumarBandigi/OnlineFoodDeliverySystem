@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import sb.OnlineFoodDeliverySystem.exception.RestaurantNotFoundException;
 import sb.OnlineFoodDeliverySystem.model.Restaurant;
-import sb.OnlineFoodDeliverySystem.service.RestaurantService;
+import sb.OnlineFoodDeliverySystem.service.impl.RestaurantServiceImpl;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -16,46 +18,68 @@ import java.util.NoSuchElementException;
 @RequestMapping("/api/restaurants")
 public class RestaurantController {
 
-
     @Autowired
-    private RestaurantService restaurantService;
-
+    private RestaurantServiceImpl restaurantService;
 
     @GetMapping("/BrowseRestaurants")
-    public List<Restaurant> getAll() {
-        return restaurantService.getAll();
-    }
-
-    @GetMapping("/getParticularRestaurant")
-    public ResponseEntity<Restaurant> getAllRestaurants(@RequestParam(name = "id", required = false) Long id, @RequestParam(name = "name", required = false) String name) {
-
-        Restaurant restaurant = null;
+    public ResponseEntity<List<Restaurant>> browseRestaurants() {
         try {
-            restaurant = restaurantService.getRestaurantByIdOrName(id, name);
-        } catch (NoSuchElementException ex) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
-        return new ResponseEntity<>(restaurant, HttpStatus.OK);
-    }
-
-
-    @PostMapping("/saveRestaurant")
-    public ResponseEntity<Restaurant> saveRestaurant(@RequestBody Restaurant restaurant) {
-        try {
-            Restaurant savedRestaurant = restaurantService.saveRestaurant(restaurant);
-            return ResponseEntity.ok(savedRestaurant);
+            List<Restaurant> restaurants = restaurantService.getAllRestaurants();
+            return new ResponseEntity<>(restaurants, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            // Handle NoSuchElementException
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Or you can return a custom error message
         } catch (Exception e) {
-            // Handle the exception and return an appropriate response
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            // Handle other exceptions
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // Or you can return a custom error message
         }
     }
 
 
-    @PostMapping("/saveAllRestaurants")
-    public List<Restaurant> saveAllRestaurants(@RequestBody List<Restaurant> restaurantList) {
-        return restaurantService.saveAllRestaurants(restaurantList);
+    @GetMapping("/BrowseRestaurantById/{id}")
+    public ResponseEntity<Restaurant> browseRestaurant(@PathVariable Long id) {
+        try {
+            Restaurant restaurant = restaurantService.getRestaurantById(id);
+            return new ResponseEntity<>(restaurant, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            // Handle NoSuchElementException
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Or you can return a custom error message
+        } catch (Exception e) {
+            // Handle other exceptions
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // Or you can return a custom error message
+        }
+    }
+
+
+    @GetMapping("/BrowseRestaurantByName/{restaurantName}")
+    public ResponseEntity<Restaurant> browseRestaurantByName(@PathVariable String restaurantName) {
+        try {
+            Restaurant restaurant = restaurantService.getRestaurantByName(restaurantName);
+            return new ResponseEntity<>(restaurant, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            // Handle NoSuchElementException
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Or you can return a custom error message
+        } catch (Exception e) {
+            // Handle other exceptions
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // Or you can return a custom error message
+        }
+    }
+
+
+}
+
+
+@ControllerAdvice
+class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(RestaurantNotFoundException.class)
+    public ResponseEntity<Object> handleRestaurantNotFoundException(RestaurantNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleOtherExceptions(Exception ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 

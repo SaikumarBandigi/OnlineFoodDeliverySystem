@@ -26,7 +26,7 @@ public class Delivery {
 
     // Getters and Setters
 
-    @ManyToOne(targetEntity = Order.class,fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER,targetEntity = Order.class)
     @JoinColumn(name = "fk_order_id")
     private Order order;
 

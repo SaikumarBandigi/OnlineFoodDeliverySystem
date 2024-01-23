@@ -1,37 +1,18 @@
 package sb.OnlineFoodDeliverySystem.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import sb.OnlineFoodDeliverySystem.Repository.RestaurantDao;
 import sb.OnlineFoodDeliverySystem.model.Restaurant;
 
 import java.util.List;
 
-
-@Service
-public class RestaurantService {
+public interface RestaurantService {
 
 
-    @Autowired
-    private RestaurantDao restaurantDao;
+   Restaurant saveRestaurant(Restaurant restaurant);
+
+    List<Restaurant> getAllRestaurants();
+
+    Restaurant getRestaurantById(Long id);
 
 
-    public List<Restaurant> getAll() {
-        return restaurantDao.findAll();
-    }
-
-    public Restaurant saveRestaurant(Restaurant restaurant) {
-        return restaurantDao.save(restaurant);
-    }
-
-
-    public List<Restaurant> saveAllRestaurants(List<Restaurant> restaurantList) {
-        return restaurantDao.saveAll(restaurantList);
-    }
-
-    public Restaurant getRestaurantByIdOrName(Long id, String name) {
-        return restaurantDao.findByIdOrName(id, name).get();
-    }
-
-
+    Restaurant getRestaurantByName(String restaurantName);
 }

@@ -1,22 +1,12 @@
 package sb.OnlineFoodDeliverySystem.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import sb.OnlineFoodDeliverySystem.Repository.MenuItemDao;
 import sb.OnlineFoodDeliverySystem.model.MenuItem;
+import sb.OnlineFoodDeliverySystem.model.Restaurant;
 
+import java.util.List;
 
-@Service
-public class MenuItemService {
+public interface MenuItemService {
 
-
-    @Autowired
-    private MenuItemDao menuItemDao;
-
-    public MenuItem saveMenuItem(MenuItem menuItem) {
-        return menuItemDao.save(menuItem);
-    }
-
-
+    List<MenuItem> getAllMenuItemsByRestaurant(Restaurant restaurant);
 
 }

@@ -18,6 +18,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
+    @Autowired
+    private FoodWebAppAuthenticationEntryPoint foodWebAppAuthenticationEntryPoint;
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -28,11 +31,32 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/account/saveAccount").permitAll() // Allow unauthenticated access to this URL
-                .antMatchers("/api/account/getAllAccounts").hasRole("ADMIN") // Allow only admin for getAllAccounts
+                .antMatchers("/api/user/saveUser").permitAll() // Allow unauthenticated access to this URL
+                .antMatchers("/api/user/getAllUsers").hasRole("ADMIN") // Allow only admin for getAllAccounts
                 .anyRequest().authenticated()
-                .and().httpBasic();
+                .and().httpBasic().realmName("Food WebApp Realm Name").authenticationEntryPoint(foodWebAppAuthenticationEntryPoint);
     }
+
+
+    /*
+
+    anyRequest() means any request is authenticated because in real time scenario to browse or to order something
+    user gets logged in so i have authenticated here
+
+     */
+
+    /*
+
+    if we want to access the url GET-> localhost:8080/api/user/getAllUsers
+
+Authorization
+Basic Auth
+Username:Sonu
+Password:Sonu
+
+then hit the url
+
+     */
 
 
 

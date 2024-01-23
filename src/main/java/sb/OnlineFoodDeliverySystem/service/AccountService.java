@@ -1,51 +1,14 @@
 package sb.OnlineFoodDeliverySystem.service;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import sb.OnlineFoodDeliverySystem.Repository.AccountDao;
-import sb.OnlineFoodDeliverySystem.exception.InsufficientBalanceException;
 import sb.OnlineFoodDeliverySystem.model.Account;
+import sb.OnlineFoodDeliverySystem.model.UserInfo;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+public interface AccountService {
 
-@Service
-public class AccountService {
+    Account getAccount(Long id);
 
-    @Autowired
-    private AccountDao accountDao;
+    Account getAccountByUserInfo(UserInfo userInfo);
 
-    public Account saveAccount(Account account) {
-        return accountDao.save(account);
-    }
+    Account updateAccountBalance(Double balance, Account account);
 
-    public Account getAccount(String accountNumber) {
-        return accountDao.findByAccountNumber(accountNumber);
-    }
-
-
-    public void payAmount(String accountNumber, double amount) throws InsufficientBalanceException {
-
-        Account account = accountDao.findByAccountNumber(accountNumber);
-
-        if (account == null) {
-            throw new NoSuchElementException("Account not found");
-        }
-
-        if (account.getBalance() < amount) {
-            throw new InsufficientBalanceException("Insufficient balance");
-        }
-
-    }
-
-    public Account getAccountById(Long id) {
-        return accountDao.findById(id).get();
-    }
-
-
-    public List<Account> getAllAccounts() {
-        return accountDao.findAll();
-    }
 }

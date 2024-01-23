@@ -9,7 +9,6 @@ public class BcryptPasswordEncoderTest {
 
         System.out.println("password encoded for Sonu " + bCryptPasswordEncoder.encode("Sonu"));
         System.out.println("password encoded for Ratna " + bCryptPasswordEncoder.encode("Ratna"));
-        System.out.println("password encoded for Karthika " + bCryptPasswordEncoder.encode("Karthika"));
 
     }
 

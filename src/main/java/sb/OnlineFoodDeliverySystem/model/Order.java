@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,9 +31,11 @@ public class Order {
 
     // Getters and Setters
 
-    @ManyToOne(targetEntity = UserInfo.class,fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = UserInfo.class)
     @JoinColumn(name = "fk_user_id")
+    @JsonIgnore  // Exclude this property from serialization
     private UserInfo user;
-    
+
+
 
 }
