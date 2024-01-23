@@ -29,5 +29,7 @@ public class Restaurant {
 
     // Getters and Setters
 
+    @OneToMany(mappedBy = "restaurant", targetEntity = MenuItem.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<MenuItem> menuItems = new ArrayList<>();
 
 }

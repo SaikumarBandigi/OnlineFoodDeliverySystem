@@ -19,10 +19,11 @@ public class Account {
     private Long id;
     private String accountNumber;
 
-    private double balance;
+    private Double balance;
 
-    @ManyToOne(targetEntity = UserInfo.class,fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = UserInfo.class)
     @JoinColumn(name = "fk_user_id")
     private UserInfo userInfo;
+
 
 }

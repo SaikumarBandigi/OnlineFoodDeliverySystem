@@ -5,78 +5,54 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sb.OnlineFoodDeliverySystem.exception.InsufficientBalanceException;
+import sb.OnlineFoodDeliverySystem.Repository.AccountDao;
 import sb.OnlineFoodDeliverySystem.model.Account;
 import sb.OnlineFoodDeliverySystem.model.MenuItem;
 import sb.OnlineFoodDeliverySystem.model.Order;
 import sb.OnlineFoodDeliverySystem.model.UserInfo;
-import sb.OnlineFoodDeliverySystem.service.AccountService;
-import sb.OnlineFoodDeliverySystem.service.OrderService;
-import sb.OnlineFoodDeliverySystem.service.UserInfoService;
+import sb.OnlineFoodDeliverySystem.service.impl.AccountServiceImpl;
+import sb.OnlineFoodDeliverySystem.service.impl.OrderServiceImpl;
+import sb.OnlineFoodDeliverySystem.service.impl.UserInfoServiceImpl;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.NoSuchElementException;
+import java.util.Arrays;
+import java.util.List;
 
 @RestController
+@RequestMapping("/api/order")
 public class OrderController {
 
+    @Autowired
+    private OrderServiceImpl orderService;
 
     @Autowired
-    private AccountService accountService;
+    private UserInfoServiceImpl userInfoService;
 
     @Autowired
-    private UserInfoService userInfoService;
-
-    @Autowired
-    private OrderService orderService;
+    private AccountServiceImpl accountService;
 
 
-    @PostMapping("/api/saveOrder/{accountNumber}")
-    public ResponseEntity<String> saveOrder(@RequestBody MenuItem menuItem, @PathVariable String accountNumber) throws Exception {
+    @PostMapping("/saveOrder/{userId}")
+    public ResponseEntity<Order> saveOrder(@RequestBody Order order, @PathVariable Long userId) {
 
-        Account account = accountService.getAccount(accountNumber);
+        UserInfo userInfo = userInfoService.getUserById(userId);
+        order.setUser(userInfo);
 
-        Double balance = account.getBalance() - menuItem.getPrice().doubleValue();
-        account.setBalance(balance);
+        Order newOrder = orderService.saveOrder(order);
 
-        accountService.saveAccount(account);
+        if (newOrder != null) {
+            Account account = accountService.getAccountByUserInfo(userInfo);
+            Double DbBalance = account.getBalance();
+            System.out.println(DbBalance);
+            if (DbBalance > newOrder.getTotalAmount().doubleValue()) {
+                Double presentbalance = DbBalance - newOrder.getTotalAmount().doubleValue();
+                System.out.println(presentbalance);
+                accountService.updateAccountBalance(presentbalance, account);
+            }
+        }
 
-        Order order = new Order();
-        order.setOrderDate(LocalDateTime.now());
-        order.setTotalAmount(menuItem.getPrice());
-        order.setUser(account.getUserInfo());
-        orderService.saveOrder(order);
-
-        return ResponseEntity.ok("Ok");
+        return new ResponseEntity<>(order, HttpStatus.ACCEPTED);
     }
-
-
-//    @PostMapping("/api/orders/process")
-//    public ResponseEntity<String> processOrder(@RequestBody Order order) {
-//        try {
-//
-//            System.out.println("processOrder came...");
-//            // Check user balance and perform payment logic
-//            BigDecimal totalAmount = order.getTotalAmount();
-//            UserInfo user = order.getUser();
-//            BigDecimal userBalance = user.getBalance();
-//
-//            if (userBalance.compareTo(totalAmount) >= 0) {
-//                // Sufficient balance, deduct the amount
-//                user.setBalance(userBalance.subtract(totalAmount));
-//                // Save the updated user and order entities
-//                userInfoService.saveUserInfo(user);
-//                orderService.saveOrder(order);
-//                return ResponseEntity.ok("Payment successful! Order placed.");
-//            } else {
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Insufficient balance.");
-//            }
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred during order processing.");
-//        }
-//    }
 
 
 }
