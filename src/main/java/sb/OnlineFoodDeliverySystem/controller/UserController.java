@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+import sb.OnlineFoodDeliverySystem.exception.UsernameIsCorrectPasswordException;
+import sb.OnlineFoodDeliverySystem.exception.UsernameNotFoundException;
 import sb.OnlineFoodDeliverySystem.model.UserInfo;
 import sb.OnlineFoodDeliverySystem.service.impl.UserInfoServiceImpl;
 
@@ -57,22 +59,32 @@ public class UserController {
     }
 
 
-//    @PostMapping("/api/login")
-//    public ResponseEntity<String> login(@RequestBody UserInfo userInfo) {
-//        try {
-//            UserInfo existingUser = userInfoService.getUserInfo(userInfo);
-//            System.out.println("came...");
-//            return ResponseEntity.ok("Login successful!");
-//        } catch (UsernameNotFoundException ex) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Username is Wrong.Please enter Right Username");
-//        } catch (UsernameIsCorrectPasswordException ex) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Username is Correct but Password is wrong");
-//        } catch (Exception ex) {
-//            // Log the exception for debugging purposes
-//            ex.printStackTrace();
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred during login");
-//        }
-//    }
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody UserInfo userInfo) {
+        try {
+            if (userInfo != null && userInfo.getUsername() != null && userInfo.getPassword() != null) {
+                UserInfo existingUser = userInfoService.getUserInfo(userInfo);
+
+                if (existingUser != null && existingUser.getPassword().equals(userInfo.getPassword())) {
+                    return ResponseEntity.ok("Login successful!");
+                } else if (existingUser != null) {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect password");
+                } else {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Username not found");
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request body");
+            }
+
+        } catch (UsernameNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Username not found. Please enter the correct username");
+        } catch (Exception ex) {
+            // Log the exception for debugging purposes
+            ex.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred during login");
+        }
+    }
+
 
 
 //    @GetMapping("/api/getOrders/{username}/{password}")

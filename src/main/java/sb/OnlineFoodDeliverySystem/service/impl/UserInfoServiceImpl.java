@@ -32,5 +32,10 @@ public class UserInfoServiceImpl implements UserInfoService {
         return userInfoDao.findAll();
     }
 
+    @Override
+    public UserInfo getUserInfo(UserInfo userInfo) {
+        return userInfoDao.getActiveUser(userInfo.getUsername());
+    }
+
 
 }

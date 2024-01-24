@@ -13,4 +13,6 @@ public interface UserInfoService {
     UserInfo getUserById(Long userId);
 
     List<UserInfo> getAllUsers();
+
+    UserInfo getUserInfo(UserInfo userInfo);
 }
