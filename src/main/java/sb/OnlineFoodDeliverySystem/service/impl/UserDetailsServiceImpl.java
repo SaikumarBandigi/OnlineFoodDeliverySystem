@@ -11,8 +11,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import sb.OnlineFoodDeliverySystem.Repository.UserInfoDao;
+import sb.OnlineFoodDeliverySystem.exception.UserNotFoundException;
 import sb.OnlineFoodDeliverySystem.model.UserInfo;
-
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -22,13 +22,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+
         UserInfo userInfo = userInfoDao.getActiveUser(userName);
         GrantedAuthority authority = new SimpleGrantedAuthority(userInfo.getRole());
+        User user = new User(userInfo.getUsername(), userInfo.getPassword(), Arrays.asList(authority));
+        return user;
 
-        User user = new User(userInfo.getUsername(), userInfo.getPassword(),Arrays.asList(authority));
-
-        UserDetails userDetails = (UserDetails)user;
-        return userDetails;
     }
 
 

@@ -6,10 +6,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import sb.OnlineFoodDeliverySystem.exception.CustomErrorMessage;
 import sb.OnlineFoodDeliverySystem.exception.RestaurantNotFoundException;
 import sb.OnlineFoodDeliverySystem.model.Restaurant;
 import sb.OnlineFoodDeliverySystem.service.impl.RestaurantServiceImpl;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -42,7 +44,7 @@ public class RestaurantController {
             Restaurant restaurant = restaurantService.getRestaurantById(id);
             return new ResponseEntity<>(restaurant, HttpStatus.OK);
         } catch (NoSuchElementException e) {
-            throw new RestaurantNotFoundException("Restauarant with ID: " + id + "Not Found");
+            throw new RestaurantNotFoundException("Restauarant with ID: " + id + " not found");
         } catch (Exception e) {
             // Handle other exceptions with a custom error message
             String errorMessage = "Internal server error while processing the request.";
@@ -69,18 +71,4 @@ public class RestaurantController {
 }
 
 
-@ControllerAdvice
-class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(RestaurantNotFoundException.class)
-    public ResponseEntity<Object> handleRestaurantNotFoundException(RestaurantNotFoundException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleOtherExceptions(Exception ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-
-}
