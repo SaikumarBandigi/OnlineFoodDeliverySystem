@@ -44,18 +44,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public Restaurant getRestaurantById(Long id) {
-        try {
-            Optional<Restaurant> optionalRestaurant = restaurantDao.findById(id);
-            return optionalRestaurant.get();
-        } catch (NoSuchElementException e) {
-            // Log the database-specific exception for troubleshooting
-            //    logger.error("Error accessing database while retrieving restaurant by id: {}. {}", id, e.getMessage(), e);
-            throw new NoSuchElementException("Internal Server Error");
-        } catch (Exception e) {
-            // Log the generic exception for troubleshooting
-            // logger.error("Error retrieving restaurant by id: {}. {}", id, e.getMessage(), e);
-            throw new RuntimeException("Internal Server Error");
-        }
+        return restaurantDao.findById(id).get();
     }
 
     @Override

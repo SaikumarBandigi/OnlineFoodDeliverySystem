@@ -37,16 +37,16 @@ public class RestaurantController {
 
 
     @GetMapping("/BrowseRestaurantById/{id}")
-    public ResponseEntity<Restaurant> browseRestaurant(@PathVariable Long id) {
+    public ResponseEntity<Object> browseRestaurant(@PathVariable Long id) {
         try {
             Restaurant restaurant = restaurantService.getRestaurantById(id);
             return new ResponseEntity<>(restaurant, HttpStatus.OK);
         } catch (NoSuchElementException e) {
-            // Handle NoSuchElementException
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Or you can return a custom error message
+            throw new RestaurantNotFoundException("Restauarant with ID: " + id + "Not Found");
         } catch (Exception e) {
-            // Handle other exceptions
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // Or you can return a custom error message
+            // Handle other exceptions with a custom error message
+            String errorMessage = "Internal server error while processing the request.";
+            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
