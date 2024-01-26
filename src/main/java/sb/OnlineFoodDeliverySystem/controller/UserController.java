@@ -57,6 +57,8 @@ public class UserController {
     }
 
 
+
+
 //    @PostMapping("/api/login")
 //    public ResponseEntity<String> login(@RequestBody UserInfo userInfo) {
 //        try {
@@ -75,22 +77,7 @@ public class UserController {
 //    }
 
 
-//    @GetMapping("/api/getOrders/{username}/{password}")
-//    public List<Order> getOrders(@PathVariable String username, @PathVariable String password) {
-//
-//
-//        try {
-//            UserInfo getActiveUserInfo = userInfoDao.getActiveUser(username);
-//            if (getActiveUserInfo != null && password.equals(getActiveUserInfo.getPassword())) {
-//                return orderService.orderList();
-//            } else {
-//                throw new NoSuchElementException();
-//            }
-//        } catch (NoSuchElementException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//    }
+
 
 
 }

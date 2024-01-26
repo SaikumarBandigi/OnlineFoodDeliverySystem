@@ -27,14 +27,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
     }
 
+//    @Override
+//    protected void configure(HttpSecurity http) throws Exception {
+//        http.csrf().disable()
+//                .authorizeRequests()
+//                .antMatchers("/api/user/saveUser").permitAll() // Allow unauthenticated access to this URL
+//                .antMatchers("/api/user/getAllUsers").hasRole("ADMIN") // Allow only admin for getAllAccounts
+//                .anyRequest().authenticated()
+//                .and().httpBasic().realmName("Food WebApp Realm Name").authenticationEntryPoint(foodWebAppAuthenticationEntryPoint);
+//    }
+
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/api/user/saveUser").permitAll() // Allow unauthenticated access to this URL
-                .antMatchers("/api/user/getAllUsers").hasRole("ADMIN") // Allow only admin for getAllAccounts
-                .anyRequest().authenticated()
-                .and().httpBasic().realmName("Food WebApp Realm Name").authenticationEntryPoint(foodWebAppAuthenticationEntryPoint);
+                .authorizeRequests().anyRequest().permitAll();
     }
 
 
@@ -57,8 +64,6 @@ Password:Sonu
 then hit the url
 
      */
-
-
 
 }
 

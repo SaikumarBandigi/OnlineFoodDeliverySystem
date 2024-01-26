@@ -21,15 +21,16 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public Restaurant saveRestaurant(Restaurant restaurant) {
+
         try {
             List<MenuItem> menuItemList = restaurant.getMenuItems();
-            System.out.println("sai kumar");
             restaurant.setMenuItems(menuItemList);
             return restaurantDao.save(restaurant);
         } catch (Exception e) {
             // Handle specific exceptions or log the error
             throw new RuntimeException("Error saving restaurant: " + e.getMessage(), e);
         }
+
     }
 
     @Override
@@ -44,12 +45,31 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public Restaurant getRestaurantById(Long id) {
-        return restaurantDao.findById(id).get();
+        try {
+            Restaurant restaurant = restaurantDao.findById(id).get();
+            return restaurant;
+        } catch (NoSuchElementException ex) {
+            throw new NoSuchElementException(ex);
+        }
+
     }
 
     @Override
     public Restaurant getRestaurantByName(String restaurantName) {
         return restaurantDao.findByName(restaurantName);
+    }
+
+    @Override
+    public Restaurant saveNewRestaurant(Restaurant restaurant) {
+        try {
+            return restaurantDao.save(restaurant);
+        } catch (DataAccessException ex) {
+            // Handle database-specific exceptions
+            throw new RuntimeException("Error saving restaurant to the database", ex);
+        } catch (Exception ex) {
+            // Handle other exceptions
+            throw new RuntimeException("An unexpected error occurred while saving the restaurant", ex);
+        }
     }
 
 

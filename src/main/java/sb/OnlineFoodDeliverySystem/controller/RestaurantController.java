@@ -23,6 +23,24 @@ public class RestaurantController {
     @Autowired
     private RestaurantServiceImpl restaurantService;
 
+
+    @PostMapping("/saveNewRestaurant")
+    public ResponseEntity<Object> saveRestaurant(@RequestBody Restaurant restaurant) {
+        try {
+            Restaurant newRestaurant = restaurantService.saveNewRestaurant(restaurant);
+            if (newRestaurant != null) {
+                return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
+            } else {
+                throw new RuntimeException("Error saving restaurant to the database");
+            }
+        } catch (RuntimeException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_GATEWAY);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_GATEWAY);
+        }
+    }
+
+
     @GetMapping("/BrowseRestaurants")
     public ResponseEntity<List<Restaurant>> browseRestaurants() {
         try {

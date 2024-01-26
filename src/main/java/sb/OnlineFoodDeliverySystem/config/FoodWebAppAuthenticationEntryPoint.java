@@ -24,4 +24,5 @@ public class FoodWebAppAuthenticationEntryPoint extends BasicAuthenticationEntry
     public void afterPropertiesSet() {
         setRealmName("Food WebApp Realm Name");
     }
+
 }

@@ -17,6 +17,7 @@ public class CustomErrorMessage {
 
     private LocalDate localDate;
 
+    private int value;
 
 
 }
